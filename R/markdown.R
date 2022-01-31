@@ -71,9 +71,9 @@ markdown_pass1 <- function(text) {
 }
 
 is_markdown_code_node <- function(x) {
-  info <- str_sub(xml_attr(x, "info"), 1, 3)
+  info <- xml_attr(x, "info")
   str_sub(xml_text(x), 1, 2) == "r " ||
-    (!is.na(info) && info %in% c("{r ", "{r}", "{r,"))
+    (!is.na(info) && grepl("^[{][a-zA-z]+[}, ]", info))
 }
 
 parse_md_pos <- function(text) {
@@ -104,10 +104,14 @@ eval_code_node <- function(node, env) {
   } else {
     text <- paste0("```", xml_attr(node, "info"), "\n", xml_text(node), "```\n")
     opts_chunk$set(
-      error = FALSE,
+      error = TRUE,
       fig.path = "man/figures/",
-      fig.process = function(path) basename(path)
+      fig.process = base::basename
     )
+    chunk_opts <- roxy_meta_get("knitr_chunk_options", NULL)
+    if (!is.null(chunk_opts)) {
+      do.call(opts_chunk$set, chunk_opts)
+    }
     knit(text = text, quiet = TRUE, envir = env)
   }
 }
@@ -356,8 +360,9 @@ mdxml_image = function(xml) {
   dest <- xml_attr(xml, "destination")
   title <- xml_attr(xml, "title")
   paste0(
-    "\\figure{", dest, "}",
-    if (nchar(title)) paste0("{", title, "}")
+    "\\if{html}{\\figure{", dest, "}",
+    if (nchar(title)) paste0("{", title, "}"),
+    "}"
   )
 }
 

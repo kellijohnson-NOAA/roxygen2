@@ -38,7 +38,7 @@ escape_rd_for_md <- function(text) {
 escaped_for_md <- paste0("\\", c(
   "acronym", "code", "command", "CRANpkg", "deqn", "doi", "dontrun",
   "dontshow", "donttest", "email", "env", "eqn", "figure", "file",
-  "if", "ifelse", "kbd", "link", "linkS4class", "method",
+  "kbd", "link", "linkS4class", "method",
   "newcommand", "option", "out", "packageAuthor",
   "packageDescription", "packageDESCRIPTION", "packageIndices",
   "packageMaintainer", "packageTitle", "pkg", "PR", "preformatted",
