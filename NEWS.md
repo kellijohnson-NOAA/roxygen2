@@ -1,5 +1,8 @@
 # roxygen2 (development version)
 
+* If you have a daily build of RStudio, roxygen2 warnings will now include a 
+  clickable hyperlink that will take you directly to the problem (#1323).
+
 * Inline R code is now powered by knitr. Where available, (knit) print methods 
   are applied (#1179). This change alters outputs and brings roxygen in line
   with console and R markdown behavior. `x <- "foo"` no longer inserts anything
@@ -60,6 +63,8 @@
   correctly (without additional `{}`) (#1062).
 
 * `@includeRmd` is now adapted to change in rmarkdown 2.12 regarding math support in `github_document()` (#1304).
+
+* Authors are now only counted only once if mentioned in merged documentations (@DanChaltiel #1333).
 
 # roxygen2 7.1.2
 
