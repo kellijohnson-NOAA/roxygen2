@@ -102,27 +102,14 @@ eval_code_node <- function(node, env) {
   } else {
     # write knitr markup for fenced code
     text <- paste0("```", xml_attr(node, "info"), "\n", xml_text(node), "```\n")
-    opts_chunk$set(
-      error = TRUE,
-      fig.path = "man/figures/",
-      fig.process = base::basename
-    )
-    chunk_opts <- roxy_meta_get("knitr_chunk_options", NULL)
-    if (!is.null(chunk_opts)) {
-      do.call(opts_chunk$set, chunk_opts)
-    }
-    knit(text = text, quiet = TRUE, envir = env)
   }
-  old_opts <- purrr::exec(opts_chunk$set, knitr_chunk_defaults)
-  withr::defer(purrr::exec(opts_chunk$set, old_opts))
+  chunk_opts <- roxy_meta_get("knitr_chunk_options", NULL)
+  if (!is.null(chunk_opts)) {
+    old_opts <- purrr::exec(opts_chunk$set, chunk_opts)
+    withr::defer(purrr::exec(opts_chunk$set, old_opts))
+  }
   knit(text = text, quiet = TRUE, envir = env)
 }
-
-knitr_chunk_defaults <- list(
-  error = FALSE,
-  fig.path = "man/figures/",
-  fig.process = function(path) basename(path)
-)
 
 str_set_all_pos <- function(text, pos, value, nodes) {
   # Cmark has a bug when reporting source positions for multi-line
